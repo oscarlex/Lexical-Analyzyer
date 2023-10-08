@@ -38,6 +38,7 @@ public class Scanner {
     public List<Token> scan() throws Exception {
         String lexeme = "";
         int state = 0;
+        int index = 1;
         char c;
         
         for(int i = 0; i < source.length(); i++) {
@@ -53,11 +54,88 @@ public class Scanner {
                         state = 15;
                         lexeme += c;
                     }
+                    else if(c == '"') {
+                        state = 24;
+                        lexeme += c;
+                    }
                     else if(c == '/') {
                         state = 26;
                         lexeme += c;
                     }
+                    else if(c == '*') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.STAR, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '+') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.PLUS, lexeme);
+                        tokens.add(t);
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '-') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.MINUS, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '{') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.LEFT_BRACE, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '}') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.RIGHT_BRACE, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == ',') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.COMMA, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == ';') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.SEMICOLON, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '.') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.DOT, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '(') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.LEFT_PAREN, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == ')') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.RIGHT_PAREN, lexeme);
+                        tokens.add(t); 
+                        lexeme = "";
+                    }
+                    else if(c == '\n' || c == '\0') {
+                        index++;
+                    }
                 break;
+                
                   
                 case 13:
                     if(Character.isLetterOrDigit(c)) {
@@ -161,6 +239,24 @@ public class Scanner {
                     }
                 break;
 
+                case 24:
+                    if(c == '"') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.STRING, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c=='\n') {
+                        Interpreter.error(index, "Line " + index + " -> " + lexeme);
+                        exit(0);
+                    }
+                    else {
+                        state = 24;
+                        lexeme += c;  
+                    }
+                break;
+
                 case 26:
                     if(c=='*') {
                         state = 27;
@@ -216,7 +312,8 @@ public class Scanner {
                 break;
             }
         }
+        Token t = new Token(TokenType.EOF, "");
+        tokens.add(t); 
         return tokens;
     }
 }
-
