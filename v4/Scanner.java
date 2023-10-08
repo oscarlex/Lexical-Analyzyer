@@ -38,6 +38,7 @@ public class Scanner {
     public List<Token> scan() throws Exception {
         String lexeme = "";
         int state = 0;
+        int index = 1;
         char c;
         
         for(int i = 0; i < source.length(); i++) {
@@ -53,7 +54,19 @@ public class Scanner {
                         state = 15;
                         lexeme += c;
                     }
+                    else if(c == '"') {
+                        state = 24;
+                        lexeme += c;
+                    }
+                    else if(c == '/') {
+                        state = 26;
+                        lexeme += c;
+                    }
+                    else if(c == '\n' || c == '\0') {
+                        index++;
+                    }
                 break;
+                
                   
                 case 13:
                     if(Character.isLetterOrDigit(c)) {
@@ -143,12 +156,11 @@ public class Scanner {
                 break;
 
                 case 20:
-                    if(Character.isDigit(c))
-                    {
+                    if(Character.isDigit(c)) {
                         state = 20;
                         lexeme += c;  
                     }
-                    else{
+                    else {
                         Token t = new Token(TokenType.NUMBER, lexeme, Float.valueOf(lexeme));
                         tokens.add(t);
 
@@ -157,9 +169,82 @@ public class Scanner {
                         i--;
                     }
                 break;
+
+                case 24:
+                    if(c == '"') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.STRING, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c=='\n') {
+                        Interpreter.error(index, "Line " + index + " -> " + lexeme);
+                        exit(0);
+                    }
+                    else {
+                        state = 24;
+                        lexeme += c;  
+                    }
+                break;
+
+                case 26:
+                    if(c=='*') {
+                        state = 27;
+                        lexeme += c;
+                    }
+                    else if(c=='/') {
+                        state = 30;
+                        lexeme += c;
+                    }
+                    else {
+                        Token t = new Token(TokenType.SLASH, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                        i--;
+                    }
+                break;
+
+                case 27:
+                    if(c=='*') {
+                        state = 28;
+                    }
+                    else {
+                        state = 27;
+                    }
+                    lexeme += c;
+                break;
+            
+                case 28:
+                    if(c =='*') {
+                        state = 28;
+                        lexeme += c;  
+                    }
+                    else if(c=='/') {
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else {
+                        state = 27;
+                        lexeme += c;  
+                    }
+                break;
+                
+                case 30:
+                    if(c=='\n') { 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else {
+                        state=30;
+                        lexeme += c;
+                    }
+                break;
             }
         }
+        Token t = new Token(TokenType.EOF, "");
+        tokens.add(t); 
         return tokens;
     }
 }
-
