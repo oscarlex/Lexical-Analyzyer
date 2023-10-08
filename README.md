@@ -1,2 +1,2 @@
 # Lexical-Analyzyer
-v4: Identification of strings
+v6: Identification of -> Tokens: ['!', '!=', '=', '==', '>', '>=', '<', '<='].

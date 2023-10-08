@@ -54,6 +54,22 @@ public class Scanner {
                         state = 15;
                         lexeme += c;
                     }
+                    else if(c == '=') {
+                        state = 33;
+                        lexeme += c;
+                    }
+                    else if(c == '>') {
+                        state = 1;
+                        lexeme += c;
+                    }
+                    else if(c == '<') {
+                        state = 4;
+                        lexeme += c;
+                    }
+                    else if(c == '!') {
+                        state = 10;
+                        lexeme += c;
+                    }
                     else if(c == '"') {
                         state = 24;
                         lexeme += c;
@@ -62,12 +78,125 @@ public class Scanner {
                         state = 26;
                         lexeme += c;
                     }
+                    else if(c == '*') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.STAR, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '+') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.PLUS, lexeme);
+                        tokens.add(t);
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '-') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.MINUS, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '{') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.LEFT_BRACE, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '}') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.RIGHT_BRACE, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == ',') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.COMMA, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == ';') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.SEMICOLON, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '.') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.DOT, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == '(') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.LEFT_PAREN, lexeme);
+                        tokens.add(t); 
+                        state = 0;
+                        lexeme = "";
+                    }
+                    else if(c == ')') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.RIGHT_PAREN, lexeme);
+                        tokens.add(t); 
+                        lexeme = "";
+                    }
                     else if(c == '\n' || c == '\0') {
                         index++;
                     }
                 break;
-                
-                  
+
+                case 1:
+                    if(c == '=') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.GREATER_EQUAL, lexeme);
+                        tokens.add(t);
+                    }
+                    else {
+                        Token t = new Token(TokenType.GREATER, lexeme);
+                        tokens.add(t);   
+                        i--;
+                    }
+                    state = 0;
+                    lexeme = "";
+                break;
+                    
+                case 4:
+                    if(c == '=') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.LESS_EQUAL, lexeme);
+                        tokens.add(t);
+                    }
+                    else {
+                        Token t = new Token(TokenType.LESS, lexeme);
+                        tokens.add(t);  
+                        i--;                        
+                    }
+                    state = 0;
+                    lexeme = "";
+                    break;
+                    
+                case 10:
+                    if(c == '=') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.BANG_EQUAL, lexeme);
+                        tokens.add(t);
+                    }
+                    else {
+                        Token t = new Token(TokenType.BANG, lexeme);
+                        tokens.add(t);   
+                        i--;
+                    }
+                    state = 0;
+                    lexeme = "";
+                break;
+                                 
                 case 13:
                     if(Character.isLetterOrDigit(c)) {
                         state = 13;
@@ -240,6 +369,23 @@ public class Scanner {
                         state=30;
                         lexeme += c;
                     }
+                break;
+                
+                case 33:
+                    if(c == '=')
+                    {
+                        lexeme += c;
+                        Token t = new Token(TokenType.EQUAL_EQUAL, lexeme);
+                        tokens.add(t);  
+                    }
+                    else 
+                    {
+                        Token t = new Token(TokenType.EQUAL, lexeme);
+                        tokens.add(t);      
+                        i--;
+                    }
+                    state = 0;
+                    lexeme = "";
                 break;
             }
         }
