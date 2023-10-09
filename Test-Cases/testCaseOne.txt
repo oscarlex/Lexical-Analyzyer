@@ -1,0 +1,5 @@
+// Test 1:
+var name = "Name";
+var firstLastName = "FirstLastName";
+
+print name + " " + firstLastName;

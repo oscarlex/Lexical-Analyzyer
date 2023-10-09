@@ -1,0 +1,23 @@
+// Test 6:
+var var1=2;
+var var2 = 3;
+var aux = 0;
+// Fibonacci sequence
+for(var i = 1; i<=10; i = i+1){
+    print var1 + var2;
+    aux = var1;
+    var1 = var2;
+    var2 = aux + var1;
+}
+/*
+This is a multi-line comment
+
+Testing reserved words:
+if
+while
+for
+var
+
+
+*/
+if((2>=2)){{}}

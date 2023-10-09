@@ -1,2 +1,2 @@
 # Lexical-Analyzyer
-v5: Identification of -> Tokens: ['(', ')' '{', '}', ',', '.', '-', '+', ';', '/', '*'].
+v7.0 (latest): Implementation of an error function and some "Test-Cases" files.

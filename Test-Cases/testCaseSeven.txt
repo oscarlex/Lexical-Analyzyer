@@ -1,0 +1,11 @@
+// Test 7:
+var radius = 5;
+var pi = 3.1416;
+var area = pi*radius *radius;
+
+if(area > = 100 and radius<10){
+    print "Valid condition";
+}
+else{
+    print "Not valid condition";
+}

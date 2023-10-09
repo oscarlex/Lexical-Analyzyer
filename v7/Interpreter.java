@@ -1,5 +1,5 @@
 // Delete or change the following line if necessary.
-package interpreter;
+package interprete;
 
 import java.io.BufferedReader;
 import java.io.IOException;

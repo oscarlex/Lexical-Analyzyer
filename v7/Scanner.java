@@ -54,6 +54,22 @@ public class Scanner {
                         state = 15;
                         lexeme += c;
                     }
+                    else if(c == '=') {
+                        state = 33;
+                        lexeme += c;
+                    }
+                    else if(c == '>') {
+                        state = 1;
+                        lexeme += c;
+                    }
+                    else if(c == '<') {
+                        state = 4;
+                        lexeme += c;
+                    }
+                    else if(c == '!') {
+                        state = 10;
+                        lexeme += c;
+                    }
                     else if(c == '"') {
                         state = 24;
                         lexeme += c;
@@ -131,12 +147,61 @@ public class Scanner {
                         tokens.add(t); 
                         lexeme = "";
                     }
+                    else if (c != ' ') {
+                        lexeme += c;
+                        Interpreter.error(index, "Line " + index + " -> " + lexeme);
+                        exit(0);
+                    }
                     else if(c == '\n' || c == '\0') {
                         index++;
                     }
                 break;
-                
-                  
+                    
+                case 1:
+                    if(c == '=') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.GREATER_EQUAL, lexeme);
+                        tokens.add(t);
+                    }
+                    else {
+                        Token t = new Token(TokenType.GREATER, lexeme);
+                        tokens.add(t);   
+                        i--;
+                    }
+                    state = 0;
+                    lexeme = "";
+                break;
+                    
+                case 4:
+                    if(c == '=') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.LESS_EQUAL, lexeme);
+                        tokens.add(t);
+                    }
+                    else {
+                        Token t = new Token(TokenType.LESS, lexeme);
+                        tokens.add(t);  
+                        i--;                        
+                    }
+                    state = 0;
+                    lexeme = "";
+                    break;
+                    
+                case 10:
+                    if(c == '=') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.BANG_EQUAL, lexeme);
+                        tokens.add(t);
+                    }
+                    else {
+                        Token t = new Token(TokenType.BANG, lexeme);
+                        tokens.add(t);   
+                        i--;
+                    }
+                    state = 0;
+                    lexeme = "";
+                break;
+                    
                 case 13:
                     if(Character.isLetterOrDigit(c)) {
                         state = 13;
@@ -181,7 +246,7 @@ public class Scanner {
                         i--;
                     }
                 break;
-                
+                    
                 case 16:
                     if(Character.isDigit(c)) {
                         state = 17;
@@ -216,14 +281,14 @@ public class Scanner {
                     }
                     lexeme += c;
                 break;
-
+                
                 case 19:
                     if(Character.isDigit(c)) {
                         state = 20;
                         lexeme += c;  
                     }
                 break;
-
+                
                 case 20:
                     if(Character.isDigit(c)) {
                         state = 20;
@@ -238,12 +303,12 @@ public class Scanner {
                         i--;
                     }
                 break;
-
+                
                 case 24:
                     if(c == '"') {
                         lexeme += c;
-                        Token t = new Token(TokenType.STRING, lexeme);
-                        tokens.add(t); 
+                        Token t = new Token(TokenType.STRING, lexeme, lexeme.replaceAll("\"", ""));
+                        tokens.add(t);
                         state = 0;
                         lexeme = "";
                     }
@@ -256,7 +321,7 @@ public class Scanner {
                         lexeme += c;  
                     }
                 break;
-
+                
                 case 26:
                     if(c=='*') {
                         state = 27;
@@ -274,7 +339,7 @@ public class Scanner {
                         i--;
                     }
                 break;
-
+                
                 case 27:
                     if(c=='*') {
                         state = 28;
@@ -284,7 +349,7 @@ public class Scanner {
                     }
                     lexeme += c;
                 break;
-            
+                
                 case 28:
                     if(c =='*') {
                         state = 28;
@@ -309,8 +374,29 @@ public class Scanner {
                         state=30;
                         lexeme += c;
                     }
+                    lexeme = "";
+                break;
+                
+                case 33:
+                    if(c == '=') {
+                        lexeme += c;
+                        Token t = new Token(TokenType.EQUAL_EQUAL, lexeme);
+                        tokens.add(t);  
+                    }
+                    else {
+                        Token t = new Token(TokenType.EQUAL, lexeme);
+                        tokens.add(t);      
+                        i--;
+                    }
+                    state = 0;
+                    lexeme = "";
                 break;
             }
+        }
+        if(!"".equals(lexeme))
+        {
+            Interpreter.error(index, "Line " + index + " -> " + lexeme);
+            exit(0);
         }
         Token t = new Token(TokenType.EOF, "");
         tokens.add(t); 

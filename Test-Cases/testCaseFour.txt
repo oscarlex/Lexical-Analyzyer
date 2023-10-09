@@ -1,0 +1,16 @@
+
+// Test 4:
+var radius = 5;
+var pi = "3.1416";
+var area = pi*radius *radius;
+
+print "Area is: ";
+print area;
+
+[
+print area;
+
+
+
+print " Hell
+"
